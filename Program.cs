@@ -26,6 +26,7 @@ namespace dictionaries
             purchases.Add((ticker: "CAT", shares: 34, price: 106.92));
             purchases.Add((ticker: "AMZN", shares: 5, price: 978.76));
             purchases.Add((ticker: "AMZN", shares: 8, price: 963.54));
+            purchases.Add((ticker: "AAPL", shares: 4, price: 144.15));
             
 
             /* 
@@ -37,27 +38,48 @@ namespace dictionaries
 
             foreach((string ticker, int shares, double price) purchase in purchases)
             {
-                // Does the company name key already exist in the report dictionary?
-
-                if (totalOwnershipReport.ContainsKey(stocks[purchase.ticker]))
+                //Does the stocks Dictionary reference exist?
+                if (stocks.ContainsKey(purchase.ticker))
                 {
-                    // If it does, update the total valuation
-                    totalOwnershipReport[stocks[purchase.ticker]] += purchase.price * purchase.shares;
+                    // Does the company name key already exist in the report dictionary?
+                    if (totalOwnershipReport.ContainsKey(stocks[purchase.ticker]))
+                    {
+                        // If it does, update the total valuation
+                        totalOwnershipReport[stocks[purchase.ticker]] += purchase.price * purchase.shares;
+
+                    }
+                    else
+                    {
+                    // If not, add the new key and set its value
+                    totalOwnershipReport.Add(stocks[purchase.ticker], purchase.price * purchase.shares);
+                    }
 
                 }
-                else
+                else 
                 {
-                // If not, add the new key and set its value
-                 totalOwnershipReport.Add(stocks[purchase.ticker], purchase.price * purchase.shares);
+                    //Add to Dictionary
+                    stocks.Add(purchase.ticker, purchase.ticker);
+
+                    //Rerun previous logic
+                    // Does the company name key already exist in the report dictionary?
+                    if (totalOwnershipReport.ContainsKey(stocks[purchase.ticker]))
+                    {
+                        // If it does, update the total valuation
+                        totalOwnershipReport[stocks[purchase.ticker]] += purchase.price * purchase.shares;
+
+                    }
+                    else
+                    {
+                    // If not, add the new key and set its value
+                    totalOwnershipReport.Add(stocks[purchase.ticker], purchase.price * purchase.shares);
+                    }
                 }
-
-
             }
 
             //wright it out
             foreach(var item in totalOwnershipReport)
             {
-                Console.WriteLine($"{item.Key} : ${item.Value}");
+                Console.WriteLine($"{item.Key} : ${item.Value.ToString("0.00")}");
             }
         }
     }
